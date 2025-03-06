@@ -4,10 +4,12 @@
 
 import sqlite3
 import pandas as pd
+import os
 
 
 
 # DB connection
+os.makedirs("../../output/", exist_ok=True)
 con = sqlite3.connect("../../output/fast1.db")
 cur = con.cursor()
 
