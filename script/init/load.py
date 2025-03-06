@@ -8,31 +8,41 @@ import pandas as pd
 
 
 # DB connection
-con = sqlite3.connect("../../data/sql/fast1.db")
+con = sqlite3.connect("../../output/fast1.db")
 cur = con.cursor()
 
-#Read csv
-races_df = pd.read_csv("../../data/csv/races.csv", sep=',', na_values=["\\N"], index_col="raceId")
-circuits_df = pd.read_csv("../../data/csv/circuits.csv", sep=',', na_values=["\\N"], index_col=0)
-constructor_results_df = pd.read_csv("../../data/csv/constructor_results.csv", sep=',', na_values=["\\N"], index_col=0)
-constructor_standings_df = pd.read_csv("../../data/csv/constructor_standings.csv", sep=',', na_values=["\\N"], index_col=0)
-constructors_df = pd.read_csv("../../data/csv/constructors.csv", sep=',', na_values=["\\N"], index_col=0)
-driver_standings_df = pd.read_csv("../../data/csv/driver_standings.csv", sep=',', na_values=["\\N"], index_col=0)
-drivers_df = pd.read_csv("../../data/csv/drivers.csv", sep=',', na_values=["\\N"], index_col=0)
-lap_times_df = pd.read_csv("../../data/csv/lap_times.csv", sep=',', na_values=["\\N"])
-pit_stops_df = pd.read_csv("../../data/csv/pit_stops.csv", sep=',', na_values=["\\N"], index_col=0)
-qualifying_df = pd.read_csv("../../data/csv/qualifying.csv", sep=',', na_values=["\\N"], index_col=0)
-results_df = pd.read_csv("../../data/csv/results.csv", sep=',', na_values=["\\N"], index_col=0)
-seasons_df = pd.read_csv("../../data/csv/seasons.csv", sep=',', na_values=["\\N"], index_col=0)
-sprint_results_df = pd.read_csv("../../data/csv/sprint_results.csv", sep=',', na_values=["\\N"], index_col=0)
-status_df = pd.read_csv("../../data/csv/status.csv", sep=',', na_values=["\\N"], index_col=0)
+path = "../../data/csv/"
+nav = ["\\N"]
+
+
+#Read csv - one by one for specific loading parameters
+races_df = pd.read_csv(path+"races.csv", sep=',', na_values=nav, index_col="raceId")
+circuits_df = pd.read_csv(path+"circuits.csv", sep=',', na_values=nav, index_col=0)
+constructor_results_df = pd.read_csv(path+"constructor_results.csv", sep=',', na_values=nav, index_col=0)
+constructor_standings_df = pd.read_csv(path+"constructor_standings.csv", sep=',', na_values=nav, index_col=0)
+constructors_df = pd.read_csv(path+"constructors.csv", sep=',', na_values=nav, index_col=0)
+driver_standings_df = pd.read_csv(path+"driver_standings.csv", sep=',', na_values=nav, index_col=0)
+drivers_df = pd.read_csv(path+"drivers.csv", sep=',', na_values=nav, index_col=0)
+
+lap_times_df = pd.read_csv(path+"lap_times.csv", sep=',', na_values=nav)
+pit_stops_df = pd.read_csv(path+"pit_stops.csv", sep=',', na_values=nav)
+
+qualifying_df = pd.read_csv(path+"qualifying.csv", sep=',', na_values=nav, index_col=0)
+results_df = pd.read_csv(path+"results.csv", sep=',', na_values=nav, index_col=0)
+seasons_df = pd.read_csv(path+"seasons.csv", sep=',', na_values=nav, index_col=0)
+sprint_results_df = pd.read_csv(path+"sprint_results.csv", sep=',', na_values=nav, index_col=0)
+status_df = pd.read_csv(path+"status.csv", sep=',', na_values=nav, index_col=0)
+
+
+# Create id and keys
+lap_times_df.insert(0,"lap_times_id", lap_times_df["raceId"].astype(str) + "-" + lap_times_df["driverId"].astype(str) + "-" + lap_times_df["lap"].astype(str))
+lap_times_df = lap_times_df.set_index("lap_times_id")
+
+pit_stops_df.insert(0,"pit_stops_id", pit_stops_df["raceId"].astype(str) + "-" + pit_stops_df["driverId"].astype(str) + "-" + pit_stops_df["lap"].astype(str))
+pit_stops_df = pit_stops_df.set_index("pit_stops_id")
 
 lap_times_df.info()
 print(lap_times_df.head())
-
-lap_times_df.insert(0,"lap_times_id", lap_times_df.index.astype(str) + "-" + lap_times_df["driverId"].astype(str) + "-" + lap_times_df["lap"].astype(str))
-lap_times_df.set_index("lap_times_id")
-
 
 
 
